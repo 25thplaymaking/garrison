@@ -1,0 +1,54 @@
+# Garrison on a Linux Docker host.
+#
+#   cp .env.example .env     # then edit .env
+#   docker compose up -d --build
+#
+# Open http://<host>:8000 (or put a reverse proxy with HTTPS in front; see
+# docs/reverse-proxy.md) and sign in with ADMIN_USERNAME / ADMIN_PASSWORD.
+
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: garrison
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:?Set MONGO_PASSWORD in .env}
+    # Reachable from this host only. 27018 so it never clashes with a MongoDB
+    # you may already run on 27017.
+    ports:
+      - "127.0.0.1:${MONGO_PORT:-27018}:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  garrison:
+    build: .
+    image: garrison:latest
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    # Host networking: game servers publish RCON on the host's 127.0.0.1 only
+    # (never on the internet), and the panel reaches it as a local process
+    # would. The panel listens on PORT (default 8000) directly on the host.
+    network_mode: host
+    env_file: .env
+    environment:
+      MONGO_URL: mongodb://garrison:${MONGO_PASSWORD}@127.0.0.1:${MONGO_PORT:-27018}/?authSource=admin
+      DB_NAME: ${DB_NAME:-garrison}
+      SERVER_DATA_ROOT: ${SERVER_DATA_ROOT:-/srv/garrison/servers}
+    volumes:
+      # The panel starts and stops game containers through the Docker socket.
+      # Anyone who controls the panel controls Docker on this host: keep it
+      # behind HTTPS and strong passwords.
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Must be the SAME path on both sides: Docker mounts server folders into
+      # the game containers by host path.
+      - ${SERVER_DATA_ROOT:-/srv/garrison/servers}:${SERVER_DATA_ROOT:-/srv/garrison/servers}
+
+volumes:
+  mongo_data:

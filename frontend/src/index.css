@@ -1,0 +1,421 @@
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /* Type: IBM Plex Sans for interface text, Saira Condensed for headings,
+     IBM Plex Mono for machine data (times, IDs, console). All three are
+     bundled with the app (no font CDN). */
+  --font-heading: 'Saira Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-condensed: 'Saira Condensed', 'Arial Narrow', sans-serif;
+
+  /* Garrison: tracer orange on gunmetal. Orange is the only hue that dresses
+     UI chrome; status colours (green, amber, red) stay semantic.
+     brand on mil-bg-deep is 7.6:1, brand-light 10.2:1, so both pass AA for
+     text. brand-dark is for fills and borders only. */
+  --color-brand: #e8833a;
+  --color-brand-dark: #b55a1c;
+  --color-brand-light: #f4a261;
+
+  /* Surfaces: cool near-blacks, about 1.2:1 apart so panels separate by tone. */
+  --color-mil-bg-deep: #0a0c0e;
+  --color-mil-bg-surface: #0f1215;
+  --color-mil-bg-card: #14181c;
+  --color-mil-bg-panel: #171c21;
+  --color-mil-bg-elevated: #20262c;
+
+  /* Hairlines in neutral steel; orange is kept for the active thing. */
+  --color-mil-line: #272e35;
+  --color-mil-line-strong: #38414a;
+
+  /* Text greys, all AA on every surface above. */
+  --color-mil-fg: #d4d8dc;
+  --color-mil-soft: #c0c6cc;
+  --color-mil-bright: #f0f3f5;
+  --color-mil-muted: #9aa2aa;
+  --color-mil-dim: #87909a;
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+  --animate-pulse-gold: pulse-gold 2s ease-in-out infinite;
+  --animate-scan-line: scan-line 8s linear infinite;
+  --animate-flicker: flicker 4s steps(1) infinite;
+  --animate-typewriter-cursor: typewriter-cursor 1s steps(1) infinite;
+  --animate-slide-up-fade: slide-up-fade 0.5s ease-out;
+  --animate-glow-pulse: glow-pulse 3s ease-in-out infinite;
+  --animate-radar-sweep: radar-sweep 4s linear infinite;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 8px rgba(232,131,58, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(232,131,58, 0.6);
+    }
+  }
+  @keyframes pulse-gold {
+    0%,
+    100% {
+      box-shadow: 0 0 8px rgba(232,131,58, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(232,131,58, 0.6);
+    }
+  }
+  @keyframes scan-line {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100vh);
+    }
+  }
+  @keyframes flicker {
+    0%,
+    97%,
+    100% {
+      opacity: 1;
+    }
+    98% {
+      opacity: 0.8;
+    }
+    99% {
+      opacity: 0.95;
+    }
+  }
+  @keyframes typewriter-cursor {
+    0%,
+    100% {
+      border-color: #f4a261;
+    }
+    50% {
+      border-color: transparent;
+    }
+  }
+  @keyframes slide-up-fade {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes glow-pulse {
+    0%,
+    100% {
+      opacity: 0.4;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+  @keyframes radar-sweep {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@layer base {
+  :root {
+    /* shadcn layer. primary/accent/ring are the HSL of --color-brand. */
+    --background: 210 17% 4%;
+    --foreground: 210 9% 85%;
+    --card: 210 17% 7%;
+    --card-foreground: 210 9% 85%;
+    --popover: 210 15% 8%;
+    --popover-foreground: 210 9% 85%;
+    --primary: 25 79% 57%;
+    --primary-foreground: 210 17% 4%;
+    --secondary: 210 14% 12%;
+    --secondary-foreground: 210 9% 85%;
+    --muted: 210 14% 12%;
+    --muted-foreground: 210 7% 62%;
+    --accent: 25 79% 57%;
+    --accent-foreground: 210 17% 4%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 95%;
+    --border: 210 13% 18%;
+    --input: 210 12% 22%;
+    --ring: 25 79% 57%;
+    --radius: 0.375rem;
+
+    /* Plain-CSS mirrors of the theme tokens for inline styles. --brand-red is
+       the urgency signal, not a brand colour, and must stay red. */
+    --brand: #e8833a;
+    --brand-light: #f4a261;
+    --brand-dark: #b55a1c;
+    --brand-red: #e61a1a;
+    --accent-color: #e8833a;
+    --accent-color-light: #f4a261;
+    --mil-bg-deep: #0a0c0e;
+    --mil-bg-surface: #0f1215;
+    --mil-bg-card: #14181c;
+    --mil-bg-panel: #171c21;
+    --mil-bg-elevated: #20262c;
+    --mil-line: #272e35;
+    --mil-line-strong: #38414a;
+
+    --font-heading: 'Saira Condensed', 'Arial Narrow', sans-serif;
+    --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --font-condensed: 'Saira Condensed', 'Arial Narrow', sans-serif;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    font-feature-settings: 'tnum' 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* Headings are set in the condensed family at their written case. Forced
+     uppercase with wide tracking made every heading shout, so nothing stood
+     out; components that want a stencilled caps label opt in explicitly. */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+}
+
+@layer utilities {
+  /* ============ GLOBAL TACTICAL SCROLLBAR ============ */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--mil-bg-deep);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(232,131,58, 0.2);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(232,131,58, 0.4);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(232,131,58, 0.2) var(--mil-bg-deep);
+  }
+
+  /* glass-card defined in App.css */
+
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* ============================================================================
+   CROSS-DEVICE COMPATIBILITY LAYER
+   Reduced motion, touch targets, safe areas, and universal input support
+   ============================================================================ */
+
+  /* ── Reduced Motion ────────────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* ── Touch Targets ─────────────────────────────────────────────────────────── */
+  /* WCAG 2.2 Level AA requires 24×24px minimum.
+   Buttons/links already meet this via Tailwind sizing (h-8 = 32px, h-9 = 36px).
+   Applying blanket 44px min-width/height to buttons/links/checkboxes inflates
+   dense layouts (mod manager, user lists) and truncates content on mobile.
+   Only standalone form controls keep a comfortable minimum here.            */
+  @media (pointer: coarse) {
+    select,
+    summary {
+      min-height: 44px;
+    }
+
+    /* Prevent iOS auto-zoom on input focus */
+    input,
+    textarea,
+    select {
+      font-size: 16px;
+    }
+  }
+
+  /* ── Safe Area Insets (notch / pill / cutout devices) ───────────────────────── */
+  /* One source of truth for cutout geometry. index.html sets
+   * `viewport-fit=cover`, so the page owns the whole screen and must keep its
+   * own chrome out of the unsafe bands. iOS reports real insets in landscape,
+   * in standalone/PWA mode and on Android devices with a cutout; in plain
+   * portrait Safari they are 0 because the browser chrome occupies them.
+   *
+   * Everything consumes the `--safe-*` custom properties rather than calling
+   * env() directly: env() is not scriptable, so a browser test can only
+   * simulate a notch by setting these. That is how the device matrix verifies
+   * the layout against a 59px Dynamic Island / 34px home-indicator band.
+   *
+   * `--shell-nav-offset` is the fixed command bar's height PLUS the top inset.
+   * Any content that clears the bar must clear the offset -- adding the inset
+   * to the bar without it would slide the page under the taller bar. */
+  :root {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --shell-nav-h: 3.5rem;
+    --shell-nav-offset: calc(var(--shell-nav-h) + var(--safe-top, 0px));
+  }
+
+  /* ── Minimum Readable Width ────────────────────────────────────────────────── */
+  /* Prevent horizontal scroll at 320px (iPhone SE / smallest supported width) */
+}
+@layer base {
+  html {
+    overflow-x: hidden;
+    /* Render native controls (scrollbars, date/time pickers, dropdowns,
+       autofill) in the dark theme instead of browser-default light. */
+    color-scheme: dark;
+    /* Theme native checkboxes, radios, and range inputs to the brand colour. */
+    accent-color: var(--color-brand);
+  }
+  /* Branded text selection so highlighting reads as part of the system. */
+  ::selection {
+    background: rgba(232,131,58, 0.28);
+    color: var(--color-mil-bright, #f1f1f1);
+  }
+}
+
+/* ── Responsive Typography ─────────────────────────────────────────────────── */
+/* Fluid heading scale: small screens get readable sizes, large screens expand */
+@layer base {
+  h1 { font-size: clamp(1.75rem, 3vw + 0.75rem, 3rem); }
+  h2 { font-size: clamp(1.375rem, 2vw + 0.6rem, 2rem); }
+  h3 { font-size: clamp(1.125rem, 1vw + 0.6rem, 1.375rem); }
+}
+
+/* ── Mobile column visibility ──────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  [data-hide-mobile] {
+    display: none !important;
+  }
+}
+
+/* ── Focus Visible ─────────────────────────────────────────────────────────── */
+/* High-contrast keyboard focus indicator for accessibility. In the base layer
+   so a component's own focus style wins: unlayered, this outline beat every
+   Tailwind utility, so controls that draw a focus ring (inputs, selects, tabs,
+   the command palette) showed a second, offset gold box on top of it. Every
+   outline-none/outline-hidden in src/ pairs with a ring/border/bg focus style. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--brand, #e8833a);
+    outline-offset: 2px;
+  }
+}
+
+/* ── Print Friendliness ────────────────────────────────────────────────────── */
+@media print {
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
