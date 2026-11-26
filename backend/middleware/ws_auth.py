@@ -4,15 +4,36 @@ The session cookie is read first (browsers send it on the handshake). A
 `?token=` query parameter is the fallback for clients that cannot set cookies.
 """
 
+from urllib.parse import urlsplit
+
 from fastapi import WebSocket
 
-from config import COOKIE_NAME
+from config import COOKIE_NAME, SITE_URL
 from database import db
 from middleware.auth import decode_session_token
 
 
+def origin_allowed(websocket: WebSocket) -> bool:
+    """Browsers always send Origin on a WebSocket handshake and attach the
+    session cookie no matter which page opened the socket. Refuse handshakes
+    from any page that is not the panel itself (cross-site WebSocket
+    hijacking), so another site cannot drive the console or RCON with a
+    signed-in operator's cookie. Clients without an Origin are not browsers."""
+    origin = websocket.headers.get("origin")
+    if not origin:
+        return True
+    origin_host = urlsplit(origin).netloc.lower()
+    allowed = {websocket.headers.get("host", "").lower()}
+    if SITE_URL:
+        allowed.add(urlsplit(SITE_URL).netloc.lower())
+    allowed.discard("")
+    return bool(origin_host) and origin_host in allowed
+
+
 async def authenticate_websocket(websocket: WebSocket) -> dict | None:
     """Return the authenticated user, or None to reject the socket."""
+    if not origin_allowed(websocket):
+        return None
     token = websocket.cookies.get(COOKIE_NAME) or websocket.query_params.get("token")
     if not token:
         return None

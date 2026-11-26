@@ -125,6 +125,12 @@ async def ensure_first_admin() -> None:
             "Set it in .env and restart to create the first admin."
         )
         return
+    if "CHANGE_ME" in ADMIN_PASSWORD.upper():
+        logger.error(
+            "No accounts exist and ADMIN_PASSWORD is still the placeholder from .env.example. "
+            "Set a real password in .env and restart to create the first admin."
+        )
+        return
     await create_user_record(ADMIN_USERNAME, ADMIN_PASSWORD, "admin")
     logger.info("Created first admin account '%s'", ADMIN_USERNAME)
 

@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 
 # ── Database ────────────────────────────────────────────────────────────────
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb://127.0.0.1:27017")
+if "CHANGE_ME" in MONGO_URL.upper():
+    raise RuntimeError("MONGO_PASSWORD is still the placeholder from .env.example. Set a real value.")
 DB_NAME = os.environ.get("DB_NAME", "garrison")
 
 # ── Sessions ────────────────────────────────────────────────────────────────
